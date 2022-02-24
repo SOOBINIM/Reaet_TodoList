@@ -1,29 +1,44 @@
 import React, { Component } from "react";
+import { MdDone, MdEditNote, MdDelete } from "react-icons/md";
 
 interface TodoItemProps {
-  text: string;
-  complete: boolean;
-  onToggle(): void;
+  text: string | undefined;
+  editMode: boolean;
+  updateInput: string;
+
+  onUpdate(): void;
   onRemove(): void;
-  // onRemove:() => void;
-  //   onUpdate(): void;
 }
 
 export class TodoItem extends Component<TodoItemProps> {
   render(): React.ReactNode {
+    const { text, onUpdate, onRemove } = this.props;
     return (
       <li>
-        <b
-          onClick={this.props.onToggle}
-          style={{
-            textDecoration: this.props.complete ? "line-through" : "none",
-          }}
-        >
-          {this.props.text}
-        </b>
-        <span style={{ marginLeft: "0.5rem" }} onClick={this.props.onRemove}>
-          [지우기]
-        </span>
+        {this.props.editMode ? (
+          <form>
+            <input
+              defaultValue={"원래값"}
+              onChange={(e) => this.setState({ updateInput: e.target.value })}
+            />
+            <span style={{ marginLeft: "0.5rem" }} onClick={() => onUpdate}>
+              <MdDone />
+            </span>
+            <span style={{ marginLeft: "0.5rem" }} onClick={() => onRemove}>
+              <MdDelete />
+            </span>
+          </form>
+        ) : (
+          <div>
+            <b>{text}</b>
+            <span style={{ marginLeft: "0.5rem" }} onClick={() => onUpdate()}>
+              <MdEditNote />
+            </span>
+            <span style={{ marginLeft: "0.5rem" }} onClick={() => onRemove()}>
+              <MdDelete />
+            </span>
+          </div>
+        )}
       </li>
     );
   }
