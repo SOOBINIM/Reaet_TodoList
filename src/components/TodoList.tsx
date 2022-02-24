@@ -144,7 +144,11 @@ class TodoList extends React.Component<Props, State> {
         <section className="form-wrapper">
           <div className="form">
             <form onSubmit={onSubmit}>
-              <input onChange={onChange} value={createInput} />
+              <input
+                onChange={onChange}
+                value={createInput}
+                placeholder={"할 일을 입력 하세요."}
+              />
               <button className="create-button" type="submit">
                 추가하기
               </button>
