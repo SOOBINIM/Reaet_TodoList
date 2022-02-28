@@ -1,7 +1,9 @@
 import React from "react";
 import "./TodoListTemlpate.css";
 import "./Form.css";
+import "./Search.css";
 import { MdDone, MdEditNote, MdDelete } from "react-icons/md";
+import Button from "@mui/material/Button";
 
 interface Props {}
 
@@ -14,6 +16,7 @@ interface TodoItemData {
 interface State {
   createInput: string;
   updateInput: string;
+  searchInput: string;
   todoItems: TodoItemData[]; // TodoItemData 로 이뤄진 배열
 }
 
@@ -26,6 +29,7 @@ class TodoList extends React.Component<Props, State> {
       todoItems: [],
       createInput: "",
       updateInput: "",
+      searchInput: "",
     };
   }
 
@@ -44,12 +48,14 @@ class TodoList extends React.Component<Props, State> {
     };
 
     console.log(
-      "원래 값 : " +
+      "id 값 : " +
+        id +
+        "원래 값 : " +
         selectedItem.text +
-        " 바뀔 불린 : " +
-        nextItem.editMode +
         " 바뀔 값 : " +
-        nextItem.text
+        nextItem.text +
+        " 바뀔 불린 : " +
+        nextItem.editMode
     );
 
     nextItems[index] = nextItem; // 교체 처리
@@ -88,58 +94,94 @@ class TodoList extends React.Component<Props, State> {
     }));
   };
 
+  onSearch = (e: React.FormEvent<HTMLInputElement>): void => {
+    const { value } = e.currentTarget;
+    this.setState({
+      searchInput: value,
+    });
+  };
+
   public render() {
-    const { onChange, onSubmit, onRemove, onUpdate } = this;
-    const { createInput, todoItems, updateInput } = this.state;
+    const { onChange, onSubmit, onRemove, onUpdate, onSearch } = this;
+    const { createInput, todoItems, updateInput, searchInput } = this.state;
 
     console.log("updateInput : " + updateInput);
+    console.log("searchInput : " + searchInput);
 
-    const todoItemsList = todoItems.map((data) => (
-      <li key={data.id}>
-        {data.editMode ? (
-          <form>
-            <input
-              defaultValue={"원래값"}
-              onChange={(e) => this.setState({ updateInput: e.target.value })}
-              value={updateInput}
-            />
-            <span
-              style={{ marginLeft: "0.5rem" }}
-              onClick={() => onUpdate(data.id, updateInput)}
-            >
-              <MdDone />
-            </span>
-            <span
-              style={{ marginLeft: "0.5rem" }}
-              onClick={() => onRemove(data.id)}
-            >
-              <MdDelete />
-            </span>
-          </form>
-        ) : (
-          <div>
-            <b>{data.text}</b>
-            <span
-              style={{ marginLeft: "0.5rem" }}
-              onClick={() => onUpdate(data.id)}
-            >
-              <MdEditNote />
-            </span>
-            <span
-              style={{ marginLeft: "0.5rem" }}
-              onClick={() => onRemove(data.id)}
-            >
-              <MdDelete />
-            </span>
-          </div>
-        )}
-      </li>
-    ));
+    // const mapToComponent = (data) => {
+    //   data.filter((todoItems) => {
+    //     return todoItems.name.indexOf(this.state.searchInput) > -1;
+    //   });
+    // };
+
+    const todoItemsList = todoItems
+      .filter((data) => {
+        if (searchInput == null) return false;
+        else if (data.text?.includes(searchInput)) return true;
+      })
+
+      // .filter((data) => {
+      //   if (this.state.searchInput == null) return data;
+      //   else if (
+      //     data.text
+      //       ?.toLowerCase()
+      //       .includes(this.state.searchInput.toLowerCase())
+      //   )
+      //     return data;
+      // })
+      .map((data) => (
+        <li key={data.id}>
+          {data.editMode ? (
+            <form>
+              <input
+                defaultValue={data.text}
+                onChange={(e) => this.setState({ updateInput: e.target.value })}
+                value={this.state.updateInput}
+              />
+              <span
+                style={{ marginLeft: "0.5rem" }}
+                onClick={() => onUpdate(data.id, updateInput)}
+              >
+                <MdDone />
+              </span>
+              <span
+                style={{ marginLeft: "0.5rem" }}
+                onClick={() => onRemove(data.id)}
+              >
+                <MdDelete />
+              </span>
+            </form>
+          ) : (
+            <div>
+              <b>{data.text}</b>
+              <span
+                style={{ marginLeft: "0.5rem" }}
+                onClick={() => onUpdate(data.id)}
+              >
+                <MdEditNote />
+              </span>
+              <span
+                style={{ marginLeft: "0.5rem" }}
+                onClick={() => onRemove(data.id)}
+              >
+                <MdDelete />
+              </span>
+            </div>
+          )}
+        </li>
+      ));
 
     return (
       <main className="todo-list-template">
         <div className="title">
           <h1>오늘 뭐하지?</h1>
+          <div className="search">
+            <input
+              onChange={(e) => onSearch(e)}
+              placeholder={"내가.. 뭐..하려 했더라??"}
+              value={this.state.searchInput}
+            ></input>
+          </div>
         </div>
         <section className="form-wrapper">
           <div className="form">
@@ -149,9 +191,9 @@ class TodoList extends React.Component<Props, State> {
                 value={createInput}
                 placeholder={"할 일을 입력 하세요."}
               />
-              <button className="create-button" type="submit">
+              <Button variant="contained" color="secondary" type="submit">
                 추가하기
-              </button>
+              </Button>
             </form>
           </div>
         </section>

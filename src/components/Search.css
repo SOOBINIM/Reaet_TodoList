@@ -1,0 +1,12 @@
+.serach {
+  display: flex;
+}
+
+.search input {
+  padding-right: 10px;
+  border: solid;
+  border-radius: 10px;
+  position: relative;
+  height: 4vh;
+  font-size: small;
+}
