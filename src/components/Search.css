@@ -1,8 +1,8 @@
-.serach {
+.inputStyle {
   display: flex;
 }
 
-.search input {
+.inputStyle input {
   padding-right: 10px;
   border: solid;
   border-radius: 10px;
