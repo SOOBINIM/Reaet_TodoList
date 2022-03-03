@@ -1,4 +1,5 @@
 import React from "react";
+import Clock from "./Timer";
 
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -17,6 +18,8 @@ import FormControl from "@mui/material/FormControl";
 
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+
+import "./TodoListTemlpate.css";
 
 interface Props {}
 
@@ -136,7 +139,7 @@ class TodoList extends React.Component<Props, State> {
     // 완료 모드일 때
     // 토글 시키고, 변경된 값 넣어주기
   };
-  public render() {
+  public render(): React.ReactNode {
     const { onChange, onSubmit, onRemove, onToggle, onSearch, onUpdateChange } =
       this;
     const { createInput, todoItems, searchInput } = this.state;
@@ -195,9 +198,10 @@ class TodoList extends React.Component<Props, State> {
     return (
       <main className="todo-list-template">
         <div className="title">
+          <Clock />
           <h1>오늘 뭐하지?</h1>
           <Divider />
-          <div>
+          <div className="form-search">
             <FormControl variant="standard">
               <InputLabel htmlFor="onSearch">할 일 검색</InputLabel>
               <Input
